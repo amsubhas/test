@@ -1,13 +1,12 @@
 "use client";
 
-import { Suspense, lazy } from "react";
+import { motion, type Variants } from 'framer-motion';
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import SectionLabel from "@/components/ui/SectionLabel";
 import GlowCard from "@/components/ui/GlowCard";
 import { Brain, Atom, Cpu, Globe, Wifi, Eye } from "lucide-react";
 
-const NeuralNetwork = lazy(() => import("@/components/3d/NeuralNetwork"));
 
 const technologies = [
   {
@@ -106,11 +105,8 @@ export default function FutureTechnologies() {
             <div className="absolute inset-0 bg-purple-900/5 rounded blur-3xl" />
             <div
               ref={canvasRef}
-              className="w-full h-full border border-purple-500/20"
-              style={{
-                clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))",
-                background: "rgba(7, 3, 14, 0.7)",
-              }}
+              className="w-full h-full glass border border-purple-500/10"
+              style={{ clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))" }}
             >
               {inView ? (
                 <Suspense
@@ -120,7 +116,7 @@ export default function FutureTechnologies() {
                     </div>
                   }
                 >
-                  <NeuralNetwork />
+                  
                 </Suspense>
               ) : (
                 <div className="w-full h-full flex items-center justify-center terminal-text text-purple-400/20">

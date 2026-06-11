@@ -73,16 +73,16 @@ function NetworkNodes() {
   return (
     <group ref={groupRef}>
       <lineSegments geometry={lineGeometry}>
-        <lineBasicMaterial color="#00f5ff" transparent opacity={0.45} linewidth={1} />
+        <lineBasicMaterial color="#00f5ff" transparent opacity={0.12} linewidth={1} />
       </lineSegments>
 
       {positions.map((pos, i) => (
         <mesh key={i} position={pos}>
-          <sphereGeometry args={[0.09, 8, 8]} />
+          <sphereGeometry args={[0.06, 6, 6]} />
           <meshStandardMaterial
             color={i % 4 === 0 ? "#00f5ff" : i % 4 === 1 ? "#0066ff" : i % 4 === 2 ? "#7b2fff" : "#ffffff"}
             emissive={i % 4 === 0 ? "#00f5ff" : i % 4 === 1 ? "#0066ff" : "#7b2fff"}
-            emissiveIntensity={1.2}
+            emissiveIntensity={0.8}
           />
         </mesh>
       ))}

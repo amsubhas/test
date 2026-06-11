@@ -1,6 +1,8 @@
 "use client";
 
 import WingPageLayout from "./WingPageLayout";
+import DigitalTwinEcosystem from "@/components/sections/DigitalTwinEcosystem";
+import FutureTechnologies from "@/components/sections/FutureTechnologies";
 
 // Content aligned with NexTech's positioning in DigitalTwinCity:
 // AI, Robotics, IoT, Simulation, Machine Learning, Digital Twins
@@ -46,6 +48,7 @@ const services = [
 
 export default function NexTechPage() {
   return (
+    <>
     <WingPageLayout
       name="NexTech"
       tagline="Intelligence Wing"
@@ -59,5 +62,6 @@ export default function NexTechPage() {
       accentGradient="linear-gradient(135deg, #00f5ff, #0066ff, #7dd3fc)"
       badge="AI · Robotics · IoT"
     />
+  </>
   );
 }

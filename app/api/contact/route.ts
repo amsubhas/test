@@ -90,8 +90,8 @@ export async function POST(req: NextRequest) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          from: "NexGiga Contact Form <noreply@nexgiga.com>",
-          to: ["info@nexgiga.com"],
+          from: "NexGiga Contact Form <noreply@nexgiga.sharvasit.in>",
+          to: ["info@nexgiga.sharvasit.in"],
           reply_to: email,
           subject: `New enquiry from ${sanitize(name)}${company ? ` (${sanitize(company)})` : ""} — ${source ?? "website"}`,
           html: `

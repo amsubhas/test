@@ -60,17 +60,17 @@ export const metadata: Metadata = {
     "Smart Cities",
     "Phygital",
   ],
-  authors: [{ name: "NexGiga", url: "https://nexgiga.com" }],
+  authors: [{ name: "NexGiga", url: "https://nexgiga.sharvasit.in" }],
   creator: "NexGiga",
   publisher: "NexGiga",
-  metadataBase: new URL("https://nexgiga.com"),
+  metadataBase: new URL("https://nexgiga.sharvasit.in"),
   alternates: {
-    canonical: "https://nexgiga.com",
+    canonical: "https://nexgiga.sharvasit.in",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://nexgiga.com",
+    url: "https://nexgiga.sharvasit.in",
     title: "NexGiga | Transforming Digital Intelligence Into Physical Reality",
     description:
       "From BIM and digital twins to robotics, AI-driven simulations, and smart infrastructure — NexGiga turns imagination into measurable real-world outcomes.",
@@ -129,12 +129,12 @@ export const viewport: Viewport = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://nexgiga.com/#organization",
+  "@id": "https://nexgiga.sharvasit.in/#organization",
   name: "NexGiga",
-  url: "https://nexgiga.com",
+  url: "https://nexgiga.sharvasit.in",
   logo: {
     "@type": "ImageObject",
-    url: "https://nexgiga.com/nexgiga-logo.png",
+    url: "https://nexgiga.sharvasit.in/nexgiga-logo.png",
     width: 512,
     height: 512,
   },
@@ -213,14 +213,14 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://nexgiga.com/#website",
-  url: "https://nexgiga.com",
+  "@id": "https://nexgiga.sharvasit.in/#website",
+  url: "https://nexgiga.sharvasit.in",
   name: "NexGiga",
   description: "Transforming Digital Intelligence Into Physical Reality",
-  publisher: { "@id": "https://nexgiga.com/#organization" },
+  publisher: { "@id": "https://nexgiga.sharvasit.in/#organization" },
   potentialAction: {
     "@type": "SearchAction",
-    target: { "@type": "EntryPoint", urlTemplate: "https://nexgiga.com/?q={search_term_string}" },
+    target: { "@type": "EntryPoint", urlTemplate: "https://nexgiga.sharvasit.in/?q={search_term_string}" },
     "query-input": "required name=search_term_string",
   },
 };
@@ -233,7 +233,7 @@ const softwareAppSchema = {
   operatingSystem: "Web",
   description: "NexBot is NexGiga's AI guide and digital assistant — providing instant answers about services, guided tours, and project consultations.",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  publisher: { "@id": "https://nexgiga.com/#organization" },
+  publisher: { "@id": "https://nexgiga.sharvasit.in/#organization" },
 };
 
 const faqSchema = {
@@ -269,7 +269,7 @@ const faqSchema = {
       name: "How can I contact NexGiga?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "You can reach NexGiga via phone/WhatsApp at +1-925-789-8909, or through the contact form on the website at nexgiga.com.",
+        text: "You can reach NexGiga via phone/WhatsApp at +1-925-789-8909, or through the contact form on the website at nexgiga.sharvasit.in.",
       },
     },
     {
@@ -302,9 +302,9 @@ const serviceSchema = {
       item: {
         "@type": "Service",
         name: "NexForce — Workforce Solutions",
-        url: "https://nexgiga.com/nexforce",
+        url: "https://nexgiga.sharvasit.in/nexforce",
         description: "Elite technology staffing, BIM specialists, AI engineers, and global talent acquisition.",
-        provider: { "@id": "https://nexgiga.com/#organization" },
+        provider: { "@id": "https://nexgiga.sharvasit.in/#organization" },
       },
     },
     {
@@ -313,9 +313,9 @@ const serviceSchema = {
       item: {
         "@type": "Service",
         name: "NexTech — AI & Technology",
-        url: "https://nexgiga.com/nextech",
+        url: "https://nexgiga.sharvasit.in/nextech",
         description: "AI development, robotics integration, IoT solutions, and digital twin implementation.",
-        provider: { "@id": "https://nexgiga.com/#organization" },
+        provider: { "@id": "https://nexgiga.sharvasit.in/#organization" },
       },
     },
     {
@@ -324,9 +324,9 @@ const serviceSchema = {
       item: {
         "@type": "Service",
         name: "NexDesign — Creative Design",
-        url: "https://nexgiga.com/nexdesign",
+        url: "https://nexgiga.sharvasit.in/nexdesign",
         description: "Brand identity, UI/UX design, architectural visualization, AR/VR experiences.",
-        provider: { "@id": "https://nexgiga.com/#organization" },
+        provider: { "@id": "https://nexgiga.sharvasit.in/#organization" },
       },
     },
     {
@@ -335,9 +335,9 @@ const serviceSchema = {
       item: {
         "@type": "Service",
         name: "NexBuild — Smart Construction",
-        url: "https://nexgiga.com/nexbuild",
+        url: "https://nexgiga.sharvasit.in/nexbuild",
         description: "BIM services, smart construction management, and the BuildMate platform.",
-        provider: { "@id": "https://nexgiga.com/#organization" },
+        provider: { "@id": "https://nexgiga.sharvasit.in/#organization" },
       },
     },
   ],

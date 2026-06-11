@@ -124,7 +124,7 @@ export default function ContactSection() {
 
             <div className="space-y-4">
               {[
-                { icon: Mail, label: "Email", value: "info@nexgiga.com", href: "mailto:info@nexgiga.com" },
+                { icon: Mail, label: "Email", value: "info@nexgiga.sharvasit.in", href: "mailto:info@nexgiga.sharvasit.in" },
                 { icon: Phone, label: "Call Us", value: "+1 925 789 8909", href: "tel:+19257898909" },
                 { icon: MessageCircle, label: "WhatsApp", value: "Chat on WhatsApp", href: "https://wa.me/19257898909" },
                 { icon: MapPin, label: "Location", value: "India — Global Operations", href: null },

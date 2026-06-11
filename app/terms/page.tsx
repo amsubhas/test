@@ -31,7 +31,7 @@ export default function TermsOfService() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">1. Acceptance of Terms</h2>
           <p>
-            By accessing or using the NexGiga website (nexgiga.com) and any associated services,
+            By accessing or using the NexGiga website (nexgiga.sharvasit.in) and any associated services,
             you agree to be bound by these Terms of Service. If you do not agree, please do not use
             our website or services.
           </p>
@@ -134,8 +134,8 @@ export default function TermsOfService() {
           <h2 className="text-xl font-semibold text-white mb-3">11. Contact</h2>
           <p>
             For questions about these Terms, contact us at:{" "}
-            <a href="mailto:info@nexgiga.com" className="text-cyan-400 hover:underline">
-              info@nexgiga.com
+            <a href="mailto:info@nexgiga.sharvasit.in" className="text-cyan-400 hover:underline">
+              info@nexgiga.sharvasit.in
             </a>
           </p>
         </section>

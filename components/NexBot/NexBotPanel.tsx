@@ -155,6 +155,9 @@ export default function NexBotPanel({
       isLoadingRef.current = true;
       onAnimStateChange('thinking');
 
+      // Dispatch neural network question activation
+      window.dispatchEvent(new CustomEvent('nexbot:question'));
+
       try {
         const history = buildHistory([...messages, userMsg]);
 
@@ -185,6 +188,9 @@ export default function NexBotPanel({
         setMessages((prev) => prev.filter((m) => !m.isLoading).concat(botMsg));
         onBotResponse(data);
         onAnimStateChange('talking');
+
+        // Dispatch neural network response wave
+        window.dispatchEvent(new CustomEvent('nexbot:response'));
 
         if (data.leadCapture?.showForm) {
           setLeadInterest(data.leadCapture.interest || '');

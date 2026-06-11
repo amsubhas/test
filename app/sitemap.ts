@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://nexgiga.com";
+  const baseUrl = "https://nexgiga.sharvasit.in";
   const now = new Date();
 
   return [

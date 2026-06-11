@@ -4,4 +4,4 @@ Allow: /
 Disallow: /api/
 
 # Sitemaps
-Sitemap: https://nexgiga.com/sitemap.xml
+Sitemap: https://nexgiga.sharvasit.in/sitemap.xml

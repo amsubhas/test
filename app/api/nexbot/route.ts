@@ -116,7 +116,7 @@ const LOCAL_RESPONSES: Record<string, BotResponse> = {
   },
   contact: {
     message:
-      "Here's how to reach the NexGiga team: 📞\n\n**Contact Details:**\n• 📱 Phone / WhatsApp: **+1-925-789-8909**\n• 🌐 Website: nexgiga.com\n• 💼 LinkedIn: linkedin.com/company/nexgiga\n\n**Response Time:** Typically 2–4 business hours.\n\nOr I can collect your details right now and have our team reach out with a tailored proposal.",
+      "Here's how to reach the NexGiga team: 📞\n\n**Contact Details:**\n• 📱 Phone / WhatsApp: **+1-925-789-8909**\n• 🌐 Website: nexgiga.sharvasit.in\n• 💼 LinkedIn: linkedin.com/company/nexgiga\n\n**Response Time:** Typically 2–4 business hours.\n\nOr I can collect your details right now and have our team reach out with a tailored proposal.",
     action: { type: 'scroll', section: '#contact' },
     leadCapture: { detected: false },
     emotion: 'attentive',

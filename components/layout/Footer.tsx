@@ -72,11 +72,11 @@ export default function Footer() {
 
             <div className="space-y-3">
               <a
-                href="mailto:info@nexgiga.com"
+                href="mailto:info@nexgiga.sharvasit.in"
                 className="flex items-center gap-3 text-white/40 hover:text-cyan-400 transition-colors text-sm group"
               >
                 <Mail size={14} className="text-cyan-400/60 group-hover:text-cyan-400" />
-                info@nexgiga.com
+                info@nexgiga.sharvasit.in
               </a>
               <a
                 href="tel:+19257898909"
