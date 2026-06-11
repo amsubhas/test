@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import NexBotCharacter from './NexBotCharacter';
 import NexBotLeadForm from './NexBotLeadForm';
-import { NexaVoiceEngine } from '@/components/nexa/NexaVoiceEngine';
+import { NexBotVoiceEngine } from '@/lib/nexbot/voiceEngine';
 import type { ChatMsg, BotResponse, NexBotAnimState, ConvMode, LeadData } from '@/lib/nexbot/types';
 import { QUICK_ACTIONS } from '@/lib/nexbot/navigationMap';
 
@@ -26,20 +26,16 @@ interface Props {
 // ─── HTML entity escaper (prevents XSS from AI response or user input) ────────
 function escapeHtml(unsafe: string): string {
   return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 // ─── Safe Markdown-to-HTML renderer ──────────────────────────────────────────
-// Input is escaped FIRST, then safe markdown patterns are applied.
-// This ensures no raw HTML from the AI or user can reach the DOM.
 function renderMarkdown(text: string): string {
-  // 1. Escape all HTML entities to neutralise any injected markup
   const safe = escapeHtml(text);
-  // 2. Apply markdown patterns on escaped text only
   return safe
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -50,6 +46,8 @@ function renderMarkdown(text: string): string {
     .replace(/\n/g, '<br/>');
 }
 
+const WELCOME_MESSAGE = "Hello! I'm **NexBot** — NexGiga's AI assistant and digital guide. 👋\n\nI can walk you through **NexForce**, **NexTech**, **NexDesign**, and **NexBuild**, answer questions about our services, give you a guided tour, or connect you with the right expert.\n\nWhat can I help you with today?";
+
 export default function NexBotPanel({
   onClose, onBotResponse, onAnimStateChange, animState, panelSide, tourMessage,
 }: Props) {
@@ -57,7 +55,7 @@ export default function NexBotPanel({
     {
       id: 'welcome',
       role: 'assistant',
-      content: "Hello! I'm **NexBot** — powered by **NEXA Intelligence**, NexGiga's AI system. 👋\n\nI can guide you through **NexForce**, **NexTech**, **NexDesign**, and **NexBuild**, answer questions about our services, navigate the site, or connect you with the right expert.\n\nWhat can I help you with today?",
+      content: WELCOME_MESSAGE,
       ts: new Date(),
     },
   ]);
@@ -78,14 +76,11 @@ export default function NexBotPanel({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const voiceEngineRef = useRef<NexaVoiceEngine | null>(null);
+  const voiceEngineRef = useRef<NexBotVoiceEngine | null>(null);
   const isLoadingRef = useRef(false);
   const prevTourMessageRef = useRef('');
 
   // ─── Tour narration injection ───────────────────────────────────────────────
-  // When the guided tour advances to a new stop, NexBot/index.tsx updates
-  // tourMessage. We add it to the chat as an assistant message so the user
-  // sees the tour commentary in real time.
   useEffect(() => {
     if (!tourMessage || tourMessage === prevTourMessageRef.current) return;
     prevTourMessageRef.current = tourMessage;
@@ -107,9 +102,9 @@ export default function NexBotPanel({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, showLeadForm]);
 
-  // ─── Init NexaVoiceEngine on mount ─────────────────────────────────────────
+  // ─── Init NexBotVoiceEngine on mount ────────────────────────────────────────
   useEffect(() => {
-    const engine = new NexaVoiceEngine();
+    const engine = new NexBotVoiceEngine();
     engine.onSpeakStart = () => setIsSpeaking(true);
     engine.onSpeakEnd   = () => {
       setIsSpeaking(false);
@@ -160,6 +155,9 @@ export default function NexBotPanel({
       isLoadingRef.current = true;
       onAnimStateChange('thinking');
 
+      // Dispatch neural network question activation
+      window.dispatchEvent(new CustomEvent('nexbot:question'));
+
       try {
         const history = buildHistory([...messages, userMsg]);
 
@@ -183,7 +181,7 @@ export default function NexBotPanel({
         const botMsg: ChatMsg = {
           id: `bot-${Date.now()}`,
           role: 'assistant',
-          content: data.message || "I couldn't process that. Please try again.",
+          content: data.message || "Let me connect you with our team directly — call **+1-925-789-8909** or use the contact form below.",
           ts: new Date(),
         };
 
@@ -191,24 +189,29 @@ export default function NexBotPanel({
         onBotResponse(data);
         onAnimStateChange('talking');
 
-        // Handle lead capture
+        // Dispatch neural network response wave
+        window.dispatchEvent(new CustomEvent('nexbot:response'));
+
         if (data.leadCapture?.showForm) {
           setLeadInterest(data.leadCapture.interest || '');
           setTimeout(() => setShowLeadForm(true), 600);
         }
 
-        // Voice output
         if (voiceEnabled && data.message) {
           speakText(data.message.replace(/\*\*/g, '').replace(/\*/g, '').replace(/•/g, ''));
         } else {
           setTimeout(() => onAnimStateChange('idle'), 3000);
         }
-      } catch {
+      } catch (err) {
+        const errorMessage = err instanceof Error && err.message.includes('too many messages')
+          ? err.message
+          : "Connection interrupted. You can also reach us directly at **+1-925-789-8909** or via the contact form.";
+
         setMessages((prev) =>
           prev.filter((m) => !m.isLoading).concat({
             id: `err-${Date.now()}`,
             role: 'assistant',
-            content: "I'm having trouble connecting. Please try again or contact us at **+1-925-789-8909**.",
+            content: errorMessage,
             ts: new Date(),
           })
         );
@@ -223,7 +226,6 @@ export default function NexBotPanel({
     [messages, voiceEnabled, buildHistory, onBotResponse, onAnimStateChange]
   );
 
-  // ─── Handle submit ──────────────────────────────────────────────────────────
   const handleSubmit = () => {
     if (input.trim()) sendMessage(input);
   };
@@ -289,7 +291,7 @@ export default function NexBotPanel({
     else startListening();
   };
 
-  // ─── Voice: Text-to-Speech via NexaVoiceEngine ──────────────────────────────
+  // ─── Voice: Text-to-Speech via NexBotVoiceEngine ────────────────────────────
   const speakText = useCallback((text: string) => {
     if (!voiceEngineRef.current) return;
     const clean = text
@@ -315,7 +317,7 @@ export default function NexBotPanel({
     setMessages([{
       id: 'welcome',
       role: 'assistant',
-      content: "Conversation reset! I'm ready to help. What would you like to know about NexGiga?",
+      content: "Fresh start! I'm ready to help. What would you like to know about NexGiga?",
       ts: new Date(),
     }]);
     setShowLeadForm(false);
@@ -325,7 +327,6 @@ export default function NexBotPanel({
 
   // ─── Lead form submit ───────────────────────────────────────────────────────
   const handleLeadSubmit = (leadData: LeadData) => {
-    // Fire-and-forget: send to contact API. Failure is silent to user (UX intent).
     fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -345,7 +346,7 @@ export default function NexBotPanel({
         {
           id: `lead-confirm-${Date.now()}`,
           role: 'assistant',
-          content: `Thank you, **${leadData.name}**! ✅\n\nYour consultation request has been received. A NexGiga expert will reach out within 24 hours.\n\nIn the meantime, feel free to ask me anything or explore our website!`,
+          content: `Thank you, **${leadData.name}**! ✅\n\nYour consultation request has been received. A NexGiga expert will reach out within 24 hours.\n\nIn the meantime, feel free to explore the site or ask me anything!`,
           ts: new Date(),
         },
       ]);
@@ -427,10 +428,10 @@ export default function NexBotPanel({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.96 }}
       transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-      className={`fixed bottom-[108px] z-[9999] w-[360px] max-sm:w-[calc(100vw-16px)] max-sm:left-2 max-sm:right-2 ${
+      className={`fixed bottom-[108px] z-[9999] w-[360px] max-sm:w-[calc(100vw-16px)] max-sm:left-2 max-sm:right-2 max-sm:bottom-[90px] ${
         panelSide === 'right' ? 'right-4' : 'left-4'
       }`}
-      style={{ maxHeight: 'calc(100vh - 140px)' }}
+      style={{ maxHeight: 'calc(100dvh - 130px)' }}
     >
       {/* Glow backdrop */}
       <div className="absolute inset-0 rounded-2xl bg-[#00f5ff]/5 blur-2xl pointer-events-none" />
@@ -451,7 +452,6 @@ export default function NexBotPanel({
         >
           <div className="relative flex-shrink-0">
             <NexBotCharacter state={animState} size={36} />
-            {/* Status dot */}
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#00f5ff] border-2 border-[#000e1e]" />
           </div>
 
@@ -462,15 +462,15 @@ export default function NexBotPanel({
             </div>
             <p className="text-white/40 text-xs truncate flex items-center gap-1">
               <Globe size={10} />
-              NexGiga Digital Employee — Always available
+              NexGiga AI Guide — Always available
             </p>
           </div>
 
           <div className="flex items-center gap-1 flex-shrink-0">
-            {/* Voice output toggle */}
             <button
               onClick={toggleVoiceOutput}
               title={voiceEnabled ? 'Disable voice output' : 'Enable voice output'}
+              aria-label={voiceEnabled ? 'Disable voice output' : 'Enable voice output'}
               className={`p-1.5 rounded-lg transition-colors ${
                 voiceEnabled ? 'text-[#00f5ff] bg-[#00f5ff]/10' : 'text-white/30 hover:text-white/60'
               }`}
@@ -478,10 +478,10 @@ export default function NexBotPanel({
               {voiceEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
             </button>
 
-            {/* Mode toggle */}
             <button
               onClick={() => setMode((m) => (m === 'text' ? 'voice' : 'text'))}
               title={mode === 'text' ? 'Switch to voice mode' : 'Switch to text mode'}
+              aria-label={mode === 'text' ? 'Switch to voice mode' : 'Switch to text mode'}
               className={`p-1.5 rounded-lg transition-colors ${
                 mode === 'voice' ? 'text-[#00f5ff] bg-[#00f5ff]/10' : 'text-white/30 hover:text-white/60'
               }`}
@@ -489,18 +489,18 @@ export default function NexBotPanel({
               {mode === 'voice' ? <Mic size={14} /> : <MessageSquare size={14} />}
             </button>
 
-            {/* Reset */}
             <button
               onClick={resetConversation}
               title="Reset conversation"
+              aria-label="Reset conversation"
               className="p-1.5 rounded-lg text-white/30 hover:text-white/60 transition-colors"
             >
               <RotateCcw size={14} />
             </button>
 
-            {/* Close */}
             <button
               onClick={onClose}
+              aria-label="Close NexBot"
               className="p-1.5 rounded-lg text-white/30 hover:text-white/70 transition-colors"
             >
               <X size={16} />
@@ -585,7 +585,7 @@ export default function NexBotPanel({
                 <p className="text-red-400 text-xs font-medium">Listening...</p>
                 {input && <p className="text-white/50 text-xs truncate mt-0.5">{input}</p>}
               </div>
-              <button onClick={stopListening} className="text-red-400/60 hover:text-red-400 p-1">
+              <button onClick={stopListening} aria-label="Stop listening" className="text-red-400/60 hover:text-red-400 p-1">
                 <X size={14} />
               </button>
             </motion.div>
@@ -607,13 +607,14 @@ export default function NexBotPanel({
                   onKeyDown={handleKeyDown}
                   placeholder="Ask me anything about NexGiga..."
                   disabled={isLoading}
+                  aria-label="Message NexBot"
                   className="flex-1 bg-transparent outline-none text-sm text-white placeholder-white/25 min-w-0"
                   maxLength={500}
                 />
-                {/* Voice input in text mode */}
                 <button
                   onClick={toggleVoiceInput}
                   title="Voice input"
+                  aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
                   className={`flex-shrink-0 transition-colors ${
                     isListening ? 'text-red-400' : 'text-white/30 hover:text-white/60'
                   }`}
@@ -625,16 +626,17 @@ export default function NexBotPanel({
               <button
                 onClick={handleSubmit}
                 disabled={!input.trim() || isLoading}
+                aria-label="Send message"
                 className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00f5ff] to-[#0066ff] flex items-center justify-center flex-shrink-0 hover:opacity-90 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-[#00f5ff]/20"
               >
                 <Send size={15} className="text-black" />
               </button>
             </div>
           ) : (
-            // Voice mode large mic button
             <div className="flex flex-col items-center gap-2 py-1">
               <button
                 onClick={toggleVoiceInput}
+                aria-label={isListening ? 'Stop listening' : 'Start speaking'}
                 className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${
                   isListening
                     ? 'bg-red-500 shadow-red-500/30 scale-110'
@@ -659,7 +661,6 @@ export default function NexBotPanel({
             </div>
           )}
 
-          {/* Lead form trigger */}
           <div className="flex items-center justify-between mt-2 px-1">
             <p className="text-white/20 text-[10px]">
               Powered by NexGiga AI

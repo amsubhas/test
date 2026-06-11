@@ -367,36 +367,21 @@ a, button {
   outline: 2px solid #fff;
 }
 
-/* ── NEXA styles ─────────────────────────────────────────────────────────── */
-.nexa-trigger:hover {
-  box-shadow: 0 0 28px rgba(0,180,255,0.3), 0 10px 30px rgba(0,0,0,0.6) !important;
-  border-color: rgba(0,245,255,0.4) !important;
-}
-
-/* Mobile: hide desktop trigger, show orb */
-@media (max-width: 640px) {
-  .nexa-trigger { display: none !important; }
-}
-
-/* Desktop: NexaOrb hidden, DesktopTrigger pill takes over */
-@media (min-width: 641px) {
-  .nexa-orb-btn { display: none !important; }
-}
-
-/* Reduced-motion: freeze all NEXA avatar animations */
-@media (prefers-reduced-motion: reduce) {
-  .nexa-avatar-container * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
 /* ── Performance: GPU layer promotion for animated elements ─────────────── */
-/* These selectors target known Framer Motion animated containers */
-.nexa-trigger,
 [data-framer-component-type] {
-  /* Let browser composite on GPU — avoids main-thread paint during animation */
   transform: translateZ(0);
+}
+
+/* Reduced-motion: full respect for user system preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Optimize section entrance animations */

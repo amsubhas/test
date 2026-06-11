@@ -2507,12 +2507,15 @@ export default function DigitalTwinCity() {
           <Suspense fallback={<LoadingCity />}>
             <Canvas
               camera={{ position: [0, 22, 33], fov: 50 }}
+              shadows={false}
+              flat={false}
               gl={{
                 antialias: typeof window !== "undefined" ? window.devicePixelRatio <= 1 : true,
                 alpha: false,
                 powerPreference: "high-performance",
-                stencil: false,        // not using stencil buffer — saves VRAM
+                stencil: false,
                 depth: true,
+                logarithmicDepthBuffer: false,
               }}
               style={{
                 background: "#010508",
@@ -2524,7 +2527,7 @@ export default function DigitalTwinCity() {
                   ? Math.min(window.devicePixelRatio, 1.5)
                   : 1
               }
-              performance={{ min: 0.5 }} // R3F adaptive DPR: reduces to 0.5× under load
+              performance={{ min: 0.5, max: 1 }}
               onCreated={({ gl, scene }) => {
                 return () => {
                   scene.traverse((obj) => {

@@ -67,13 +67,14 @@ function sanitizeMessage(content: string): string {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// LOCAL KNOWLEDGE ENGINE — answers NexGiga questions instantly, zero API calls
+// LAYER 1 & 2: LOCAL KNOWLEDGE ENGINE
+// Instant answers for NexGiga topics — zero API calls, always available
 // ═════════════════════════════════════════════════════════════════════════════
 
 const LOCAL_RESPONSES: Record<string, BotResponse> = {
   overview: {
     message:
-      "I'm **NexBot**, NexGiga's AI Digital Employee! 👋\n\n**NexGiga** is a pioneering technology company that bridges the digital and physical worlds — transforming ideas into measurable real-world outcomes through four specialized wings:\n\n• **NexForce** — Human Capital & Workforce Solutions\n• **NexTech** — AI, Robotics, IoT & Simulation\n• **NexDesign** — Creative Design & Visualization\n• **NexBuild** — Smart Construction via BuildMate\n\n📊 **Track Record:**\n• 200+ Projects Delivered across 15+ countries\n• 50+ AI Models Deployed\n• Industry 4.0 pioneer in construction, manufacturing, healthcare & smart cities\n\nWhich wing would you like to explore?",
+      "I'm **NexBot**, NexGiga's AI guide! 👋\n\n**NexGiga** bridges the digital and physical worlds — transforming ideas into measurable real-world outcomes through four specialized wings:\n\n• **NexForce** — Human Capital & Workforce Solutions\n• **NexTech** — AI, Robotics, IoT & Simulation\n• **NexDesign** — Creative Design & Visualization\n• **NexBuild** — Smart Construction via BuildMate\n\n📊 **Track Record:**\n• 200+ Projects Delivered across 15+ countries\n• 50+ AI Models Deployed\n• Industry 4.0 pioneer in construction, manufacturing, healthcare & smart cities\n\nWhich wing would you like to explore?",
     action: { type: 'scroll', section: '#wings' },
     leadCapture: { detected: false },
     emotion: 'happy',
@@ -115,7 +116,7 @@ const LOCAL_RESPONSES: Record<string, BotResponse> = {
   },
   contact: {
     message:
-      "Here's how to reach the NexGiga team directly: 📞\n\n**Contact Details:**\n• 📱 Phone / WhatsApp: **+1-925-789-8909**\n• 🌐 Website: nexgiga.com\n• 💼 LinkedIn: linkedin.com/company/nexgiga\n\n**Response Time:** Typically 2–4 business hours.\n\nOr I can collect your details right now and have our team reach out with a tailored proposal.",
+      "Here's how to reach the NexGiga team: 📞\n\n**Contact Details:**\n• 📱 Phone / WhatsApp: **+1-925-789-8909**\n• 🌐 Website: nexgiga.sharvasit.in\n• 💼 LinkedIn: linkedin.com/company/nexgiga\n\n**Response Time:** Typically 2–4 business hours.\n\nOr I can collect your details right now and have our team reach out with a tailored proposal.",
     action: { type: 'scroll', section: '#contact' },
     leadCapture: { detected: false },
     emotion: 'attentive',
@@ -129,7 +130,7 @@ const LOCAL_RESPONSES: Record<string, BotResponse> = {
   },
   tour: {
     message:
-      "I'd love to walk you through everything! 🎯\n\nStarting your **guided tour** now — I'll scroll through each key section of NexGiga and explain what you're seeing. ✨\n\nThe tour covers: NexGiga Wings → Services → Industry Solutions → BuildMate → Impact Metrics → Contact",
+      "Let me walk you through everything! 🎯\n\nStarting your **guided tour** now — I'll scroll through each key section of NexGiga and explain what you're seeing. ✨\n\nThe tour covers: NexGiga Wings → Services → Industry Solutions → BuildMate → Impact Metrics → Contact",
     action: { type: 'tour' },
     leadCapture: { detected: false },
     emotion: 'excited',
@@ -150,7 +151,7 @@ const LOCAL_RESPONSES: Record<string, BotResponse> = {
   },
   lead: {
     message:
-      "I'd love to help you get started! 🎯\n\nLet me connect you with the right NexGiga expert. Fill in the quick form below and our team will reach out within **24 hours** with a customized proposal.",
+      "Let me connect you with the right NexGiga expert. 🎯\n\nFill in the quick form below and our team will reach out within **24 hours** with a customized proposal.",
     action: { type: 'lead-form' },
     leadCapture: { detected: true, showForm: true },
     emotion: 'happy',
@@ -171,6 +172,46 @@ const LOCAL_RESPONSES: Record<string, BotResponse> = {
   },
 };
 
+// ─── LAYER 3: FAQ Engine ──────────────────────────────────────────────────────
+const FAQ_RESPONSES: Array<{ keywords: string[]; response: BotResponse }> = [
+  {
+    keywords: ['how long', 'timeline', 'project duration', 'how fast', 'delivery time', 'turnaround'],
+    response: {
+      message: "Project timelines at NexGiga vary based on scope and complexity:\n\n• **BIM Modelling:** 2–8 weeks depending on LOD and building size\n• **AI Model Development:** 4–16 weeks for custom solutions\n• **Digital Twin Setup:** 6–20 weeks for full implementation\n• **Design Projects:** 2–6 weeks for branding & visualization\n• **Staffing Placement:** 1–4 weeks for specialist placement\n\nEvery project starts with a scoping session to define exact timelines. Want to schedule one?",
+      action: { type: 'scroll', section: '#contact' },
+      leadCapture: { detected: true, interest: 'Project Timeline Inquiry' },
+      emotion: 'attentive',
+    },
+  },
+  {
+    keywords: ['pricing', 'how much', 'cost', 'price', 'budget', 'fee', 'rate', 'charge'],
+    response: {
+      message: "NexGiga's pricing is project-scoped — there's no one-size-fits-all rate for enterprise technology.\n\nWhat determines your investment:\n• **Scope & complexity** of the deliverable\n• **Team size** required for execution\n• **Timeline** and urgency\n• **Technology stack** needed\n\nWe offer **free initial consultations** to scope your project accurately and provide transparent pricing. No obligations — just a conversation.\n\nShall I connect you with our team?",
+      action: { type: 'lead-form' },
+      leadCapture: { detected: true, interest: 'Pricing Inquiry', showForm: true },
+      emotion: 'attentive',
+    },
+  },
+  {
+    keywords: ['team', 'employees', 'staff', 'how many people', 'headcount', 'company size'],
+    response: {
+      message: "NexGiga operates as a lean, high-performance team of engineers, architects, designers, and AI specialists — complemented by our **NexForce** talent network that scales delivery capacity globally.\n\nThis model lets us staff teams precisely to your project needs — from a 2-person BIM team to a 50-person digital transformation program.\n\nIs team capacity something you're evaluating for your project?",
+      action: { type: 'none' },
+      leadCapture: { detected: false },
+      emotion: 'neutral',
+    },
+  },
+  {
+    keywords: ['certifications', 'certified', 'accredited', 'credentials', 'qualifications'],
+    response: {
+      message: "NexGiga specialists hold certifications across:\n\n• **BIM:** Autodesk Revit, Navisworks, ArchiCAD\n• **AI/ML:** TensorFlow, PyTorch, Azure AI, AWS ML\n• **Project Management:** PMP, PRINCE2\n• **Construction:** Leed, RICS, BIM Level 2/3\n• **Cloud:** AWS, Azure, Google Cloud\n\nWant to know about certifications for a specific project area?",
+      action: { type: 'none' },
+      leadCapture: { detected: false },
+      emotion: 'neutral',
+    },
+  },
+];
+
 // ─── Intent Detection ─────────────────────────────────────────────────────────
 interface IntentResult {
   topic: string | null;
@@ -178,6 +219,7 @@ interface IntentResult {
   isNexGiga: boolean;
   isLead: boolean;
   isGeneral: boolean;
+  faqMatch: BotResponse | null;
 }
 
 type PatternEntry = [string[], string, number];
@@ -280,23 +322,33 @@ function detectIntent(text: string): IntentResult {
     }
   }
 
+  // Check FAQ patterns
+  let faqMatch: BotResponse | null = null;
+  for (const faq of FAQ_RESPONSES) {
+    if (faq.keywords.some((kw) => lower.includes(kw))) {
+      faqMatch = faq.response;
+      break;
+    }
+  }
+
   return {
     topic: bestTopic,
     confidence: bestScore,
     isNexGiga: bestScore > 0,
     isLead: bestTopic === 'lead',
     isGeneral: isGeneral && bestScore === 0,
+    faqMatch,
   };
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// GEMINI FREE-TIER FALLBACK
-// Env var: Gemini_API_Key (exact name set in Vercel — API key starts with AQ...)
+// LAYER 4: GEMINI AI
+// Env var: Gemini_API_Key (set in Vercel — API key may begin with AQ..., AI..., etc.)
 // ═════════════════════════════════════════════════════════════════════════════
 
-const GENERAL_SYSTEM_PROMPT = `You are NexBot, a friendly and knowledgeable AI assistant for NexGiga.
+const GENERAL_SYSTEM_PROMPT = `You are NexBot, NexGiga's intelligent AI guide.
 Answer the user's question helpfully in 2-4 sentences.
-If relevant, add a natural bridge: "If you ever need AI, BIM, robotics, design, or workforce help, NexGiga can assist!"
+If relevant, naturally bridge to NexGiga: "If you ever need AI, BIM, robotics, design, or workforce help, NexGiga can assist!"
 
 CRITICAL: Respond ONLY with valid JSON. No markdown fences. No extra text. Exact structure:
 {
@@ -309,8 +361,10 @@ CRITICAL: Respond ONLY with valid JSON. No markdown fences. No extra text. Exact
 // Try Gemini models in order of preference (free tier compatible)
 const GEMINI_MODELS = [
   'gemini-2.0-flash',
+  'gemini-2.0-flash-lite',
   'gemini-1.5-flash',
   'gemini-1.5-flash-latest',
+  'gemini-1.5-flash-8b',
 ];
 
 async function callGeminiWithModel(
@@ -341,19 +395,13 @@ async function callGemini(
   messages: ApiMessage[],
   useFullSystemPrompt: boolean,
   pageContext?: string
-): Promise<BotResponse> {
-  // Vercel env var is named exactly: Gemini_API_Key
+): Promise<BotResponse | null> {
+  // Accepts keys starting with any prefix (AQ..., AI..., etc.)
   const apiKey = process.env.Gemini_API_Key;
 
-  if (!apiKey) {
-    console.warn('[NexBot] Gemini_API_Key not configured — using fallback response');
-    return {
-      message:
-        "I'm best equipped to answer questions about NexGiga's services, wings, and solutions. For anything else, reach our team directly at **+1-925-789-8909** or via WhatsApp. 😊",
-      action: { type: 'scroll', section: '#contact' },
-      leadCapture: { detected: false },
-      emotion: 'neutral',
-    };
+  if (!apiKey || apiKey.trim().length < 10) {
+    console.warn('[NexBot] Gemini_API_Key not configured');
+    return null;
   }
 
   const baseInstruction = useFullSystemPrompt ? NEXBOT_SYSTEM_PROMPT : GENERAL_SYSTEM_PROMPT;
@@ -366,21 +414,19 @@ async function callGemini(
     parts: [{ text: m.content }],
   }));
 
-  // Try each model in sequence until one succeeds
-  let lastError: Error | null = null;
   for (const model of GEMINI_MODELS) {
     try {
       const response = await callGeminiWithModel(model, contents, systemInstruction, apiKey);
 
-      if (response.status === 404) {
-        // Model not found — try next
+      if (response.status === 404) continue; // Model not found — try next
+      if (response.status === 429) {
+        console.warn(`[NexBot] Gemini ${model} rate limited`);
         continue;
       }
 
       if (!response.ok) {
         const errText = await response.text();
         console.error(`[NexBot] Gemini ${model} error ${response.status}:`, errText);
-        lastError = new Error(`Gemini ${response.status}`);
         continue;
       }
 
@@ -401,16 +447,13 @@ async function callGemini(
 
       try {
         const parsed: BotResponse = JSON.parse(cleaned);
-        if (!parsed.message || typeof parsed.message !== 'string') {
-          throw new Error('Invalid structure');
-        }
-        // Ensure all fields exist with defaults
-        parsed.action    ??= { type: 'none' };
+        if (!parsed.message || typeof parsed.message !== 'string') throw new Error('Invalid structure');
+        parsed.action      ??= { type: 'none' };
         parsed.leadCapture ??= { detected: false };
-        parsed.emotion   ??= 'neutral';
+        parsed.emotion     ??= 'neutral';
         return parsed;
-      } catch (parseErr) {
-        // Gemini responded but not in JSON format — wrap it
+      } catch {
+        // Gemini responded but not in JSON format — wrap it gracefully
         console.warn(`[NexBot] ${model} JSON parse failed, wrapping raw text`);
         return {
           message: cleaned.slice(0, 1500),
@@ -420,16 +463,50 @@ async function callGemini(
         };
       }
     } catch (err) {
-      lastError = err as Error;
       console.error(`[NexBot] ${model} fetch error:`, err);
     }
   }
 
-  console.error('[NexBot] All Gemini models failed. Last error:', lastError);
+  console.error('[NexBot] All Gemini models exhausted');
+  return null;
+}
+
+// ─── LAYER 5: Guided Assistance Fallback ─────────────────────────────────────
+// User should almost NEVER see an error. This builds a helpful response
+// from contextual clues even when everything else fails.
+function buildGuidedFallback(lastMessage: string, pathname: string): BotResponse {
+  const lower = lastMessage.toLowerCase();
+
+  // Try to give page-contextual help
+  if (pathname.startsWith('/nextech') || lower.includes('ai') || lower.includes('tech')) {
+    return {
+      message: "NexGiga's **NexTech** wing specializes in AI, robotics, IoT, and digital simulation. What specific technology challenge can I help you explore?\n\n• **AI & Machine Learning** — predictive analytics, computer vision, NLP\n• **Robotics** — industrial automation, cobots, RPA\n• **IoT** — smart sensors, SCADA, edge computing\n• **Digital Twins** — live virtual replicas of physical assets",
+      action: { type: 'navigate', path: '/nextech' },
+      leadCapture: { detected: false },
+      emotion: 'attentive',
+    };
+  }
+  if (pathname.startsWith('/nexforce') || lower.includes('hire') || lower.includes('team')) {
+    return {
+      message: "**NexForce** is NexGiga's workforce solutions wing — connecting you with elite technology talent globally. We place BIM engineers, AI specialists, IoT architects, and digital transformation teams.\n\nWhat kind of talent are you looking for?",
+      action: { type: 'navigate', path: '/nexforce' },
+      leadCapture: { detected: true, interest: 'Workforce Solutions' },
+      emotion: 'attentive',
+    };
+  }
+  if (pathname.startsWith('/nexdesign') || lower.includes('design') || lower.includes('brand')) {
+    return {
+      message: "**NexDesign** crafts world-class visual experiences — from brand identity and UI/UX to architectural visualization, 3D animation, and AR/VR. What design challenge can we help with?",
+      action: { type: 'navigate', path: '/nexdesign' },
+      leadCapture: { detected: true, interest: 'Design Solutions' },
+      emotion: 'happy',
+    };
+  }
+
+  // Universal fallback — always helpful, never an error
   return {
-    message:
-      "I'm having a brief technical moment. For NexGiga-related questions I have full knowledge — or reach us directly at **+1-925-789-8909**.",
-    action: { type: 'none' },
+    message: "I can help you explore everything NexGiga offers! Our four wings cover:\n\n• **NexForce** — Talent & workforce solutions\n• **NexTech** — AI, robotics, IoT & simulation\n• **NexDesign** — Creative design & visualization\n• **NexBuild** — Smart construction & BIM\n\nOr reach our team directly at **+1-925-789-8909**. Which area interests you most?",
+    action: { type: 'scroll', section: '#wings' },
     leadCapture: { detected: false },
     emotion: 'neutral',
   };
@@ -447,7 +524,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           message:
-            "I'm receiving too many requests right now. Please wait a moment, or contact us at **+1-925-789-8909**.",
+            "I'm receiving a high volume of requests right now. Please wait a moment, or contact us directly at **+1-925-789-8909**.",
           action: { type: 'none' },
           leadCapture: { detected: false },
           emotion: 'neutral',
@@ -474,13 +551,18 @@ export async function POST(req: NextRequest) {
 
     const lastMessage = sanitized[sanitized.length - 1].content;
 
-    // ── Layer 1 & 2: Local Knowledge Engine ────────────────────────────────
+    // ── LAYER 1 & 2: Local Knowledge Engine ─────────────────────────────────
     const intent = detectIntent(lastMessage);
     if (intent.topic && intent.confidence >= 0.75 && LOCAL_RESPONSES[intent.topic]) {
       return NextResponse.json(LOCAL_RESPONSES[intent.topic]);
     }
 
-    // ── Layer 3: Gemini Fallback ────────────────────────────────────────────
+    // ── LAYER 3: FAQ Engine ──────────────────────────────────────────────────
+    if (intent.faqMatch && intent.confidence < 0.75) {
+      return NextResponse.json(intent.faqMatch);
+    }
+
+    // ── LAYER 4: Gemini AI ────────────────────────────────────────────────────
     const pageContext =
       pathname.startsWith('/nexforce')  ? 'User is on NexForce page — focus on workforce and talent solutions.'
       : pathname.startsWith('/nextech')   ? 'User is on NexTech page — focus on AI, robotics, IoT, and simulation.'
@@ -490,14 +572,21 @@ export async function POST(req: NextRequest) {
 
     const useFullPrompt = intent.isNexGiga || !intent.isGeneral;
     const geminiResponse = await callGemini(sanitized, useFullPrompt, pageContext);
-    return NextResponse.json(geminiResponse);
+
+    if (geminiResponse) {
+      return NextResponse.json(geminiResponse);
+    }
+
+    // ── LAYER 5: Guided Assistance — guaranteed helpful response ─────────────
+    return NextResponse.json(buildGuidedFallback(lastMessage, pathname));
 
   } catch (error) {
     console.error('[NexBot] Unhandled error:', error);
+    // Even on a crash: return something helpful, never a bare error
     return NextResponse.json(
       {
         message:
-          'I encountered an unexpected issue. Please reach us directly at **+1-925-789-8909** or via the contact form.',
+          'Let me connect you with our team directly — call **+1-925-789-8909** or use the contact form below.',
         action: { type: 'scroll', section: '#contact' },
         leadCapture: { detected: false },
         emotion: 'neutral',

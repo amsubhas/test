@@ -314,7 +314,7 @@ export default function NexBot() {
         setTourMessage(`🗺️ **Tour Stop ${i + 1}/${GUIDED_TOUR_STOPS.length}:** ${stop.message}`);
       }
 
-      setAnimState('attentive' as NexBotAnimState);
+      setAnimState('talking');
       await delay(stop.duration);
       if (!tourActiveRef.current) break;
     }
