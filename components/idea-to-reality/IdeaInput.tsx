@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IDEA_EXAMPLES } from "./SimulationEngine";
 
 interface IdeaInputProps {
-  onSimulate: (idea: string) => void | Promise<void>;
+  onSimulate: (idea: string) => void;
   isSimulating: boolean;
 }
 

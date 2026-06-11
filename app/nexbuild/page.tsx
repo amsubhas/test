@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import NexBuildPage from "@/components/wings/NexBuildPage";
+import NexBuildRedirect from "./redirect";
 
 export const metadata: Metadata = {
-  title: "NexBuild | Smart Construction & BIM Technology",
+  title: "NexBuild | BuildMate Construction Technology Platform",
   description:
-    "NexBuild is NexGiga's smart construction wing — delivering LOD 100-500 BIM, digital twin implementation, clash detection, and the BuildMate platform for end-to-end construction management.",
-  alternates: { canonical: "https://nexgiga.sharvasit.in/nexbuild" },
+    "NexBuild powers BuildMate — NexGiga's comprehensive BIM and construction technology platform for digital twin workflows, clash detection, and real-time project collaboration.",
+  robots: { index: false, follow: false }, // redirect page — no indexing needed
 };
 
-export default function NexBuildRoute() {
-  return <NexBuildPage />;
+export default function NexBuildPage() {
+  return <NexBuildRedirect />;
 }

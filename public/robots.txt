@@ -1,7 +1,4 @@
-# NexGiga Robots.txt
 User-agent: *
 Allow: /
-Disallow: /api/
 
-# Sitemaps
-Sitemap: https://nexgiga.sharvasit.in/sitemap.xml
+Sitemap: https://nexgiga.com/sitemap.xml

@@ -174,7 +174,7 @@ function ContactForm({
           Submission Failed
         </h3>
         <p className="text-white/50 max-w-xs mb-8">
-          Something went wrong. Please try again or contact us directly at info@nexgiga.sharvasit.in.
+          Something went wrong. Please try again or contact us directly at info@nexgiga.com.
         </p>
         <button
           onClick={() => setStatus("idle")}
@@ -629,8 +629,8 @@ export default function WingPageLayout({
                   {
                     icon: Mail,
                     label: "Email",
-                    value: "info@nexgiga.sharvasit.in",
-                    href: "mailto:info@nexgiga.sharvasit.in",
+                    value: "info@nexgiga.com",
+                    href: "mailto:info@nexgiga.com",
                   },
                   {
                     icon: Phone,

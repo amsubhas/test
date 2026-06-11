@@ -24,7 +24,7 @@ accessible to organizations of all sizes worldwide.
 
 CONTACT INFORMATION:
 - Phone: +1-925-789-8909
-- Website: https://nexgiga.sharvasit.in
+- Website: https://nexgiga.com
 - WhatsApp: +1-925-789-8909 (available via website)
 - LinkedIn: linkedin.com/company/nexgiga
 

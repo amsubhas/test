@@ -597,70 +597,23 @@ export default function IdeaToRealitySection() {
   const resultRef = useRef<HTMLDivElement>(null);
   const { ref: sectionRef, inView } = useInView({ triggerOnce: true, rootMargin: "100px" });
 
-  // Handle simulation start — tries Gemini first, falls back to template
+  // Handle simulation start
   const handleSimulate = useCallback(
-    async (idea: string) => {
-      // Start simulation immediately with template data (instant feedback)
-      const templateData = analyzeIdea(idea);
-      setSimulationData(templateData);
+    (idea: string) => {
+      const data = analyzeIdea(idea);
+      setSimulationData(data);
       setIsSimulating(true);
       setCurrentStage(0);
 
-      // Scroll into view
+      // Store in sessionStorage for NexBot context
+      try {
+        sessionStorage.setItem("__nexgiga_sim", JSON.stringify({ idea, projectType: data.industry.projectType, wing: data.industry.result.wing }));
+      } catch (_) { /* ignore storage errors */ }
+
+      // Scroll section into view
       setTimeout(() => {
         document.getElementById("idea-to-reality")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
-
-      // Try Gemini enhancement in the background — upgrade if it arrives before result stage
-      try {
-        const res = await fetch("/api/simulate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idea }),
-        });
-        if (res.ok) {
-          const json = await res.json();
-          if (json.source === "gemini" && json.data) {
-            const g = json.data;
-            // Map Gemini response to SimulationData format
-            const enhanced: SimulationData = {
-              idea,
-              industry: {
-                name: g.industry,
-                projectType: g.projectType,
-                analysisItems: g.analysisItems ?? templateData.industry.analysisItems,
-                tags: g.tags ?? templateData.industry.tags,
-                designElements: g.designElements ?? templateData.industry.designElements,
-                twinFeatures: g.twinFeatures ?? templateData.industry.twinFeatures,
-                constructionPhases: g.constructionPhases ?? templateData.industry.constructionPhases,
-                result: {
-                  title: g.result.title,
-                  description: g.result.description,
-                  metrics: g.result.metrics ?? templateData.industry.result.metrics,
-                  benefits: g.result.benefits ?? templateData.industry.result.benefits,
-                  timeline: g.result.timeline ?? templateData.industry.result.timeline,
-                  wing: g.result.wing ?? templateData.industry.result.wing,
-                },
-              },
-              timestamp: templateData.timestamp,
-            };
-            // Only upgrade if we haven't reached the result stage yet
-            setCurrentStage((prev) => {
-              if (prev < SIMULATION_STAGES.length - 1) {
-                setSimulationData(enhanced);
-              }
-              return prev;
-            });
-          }
-        }
-      } catch {
-        // Silently fall through to template — already displaying
-      }
-
-      // Store in sessionStorage for NexBot context
-      try {
-        sessionStorage.setItem("__nexgiga_sim", JSON.stringify({ idea, projectType: templateData.industry.projectType, wing: templateData.industry.result.wing }));
-      } catch (_) { /* ignore storage errors */ }
     },
     []
   );

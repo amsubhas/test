@@ -71,8 +71,8 @@ export default function PrivacyPolicy() {
           <p>
             Contact form submissions are retained for up to 24 months to enable business follow-up.
             You may request deletion of your data at any time by emailing{" "}
-            <a href="mailto:info@nexgiga.sharvasit.in" className="text-cyan-400 hover:underline">
-              info@nexgiga.sharvasit.in
+            <a href="mailto:info@nexgiga.com" className="text-cyan-400 hover:underline">
+              info@nexgiga.com
             </a>
             .
           </p>
@@ -92,8 +92,8 @@ export default function PrivacyPolicy() {
           <p>
             Depending on your jurisdiction, you may have rights to access, correct, delete, or
             restrict processing of your personal data. To exercise these rights, contact us at{" "}
-            <a href="mailto:info@nexgiga.sharvasit.in" className="text-cyan-400 hover:underline">
-              info@nexgiga.sharvasit.in
+            <a href="mailto:info@nexgiga.com" className="text-cyan-400 hover:underline">
+              info@nexgiga.com
             </a>
             . We will respond within 30 days.
           </p>
@@ -122,8 +122,8 @@ export default function PrivacyPolicy() {
           <p>
             For privacy-related questions or requests, contact NexGiga at:
             <br />
-            <a href="mailto:info@nexgiga.sharvasit.in" className="text-cyan-400 hover:underline">
-              info@nexgiga.sharvasit.in
+            <a href="mailto:info@nexgiga.com" className="text-cyan-400 hover:underline">
+              info@nexgiga.com
             </a>{" "}
             · +1-925-789-8909
           </p>

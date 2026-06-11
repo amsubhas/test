@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronDown, Cpu, Globe, Layers } from "lucide-react";
-
-// Lazy-load neural network — excluded from initial JS bundle
-const NeuralNetworkBackground = lazy(
-  () => import("@/components/backgrounds/NeuralNetworkBackground")
-);
 
 const stats = [
   { label: "Projects Delivered", value: "200+", icon: Layers },
@@ -20,6 +15,30 @@ const taglines = [
   "Physical Reality",
   "Infinite Possibility",
   "Measurable Outcomes",
+];
+
+// Floating particle positions — deterministic so no hydration mismatch
+const PARTICLES = [
+  { x: 12, y: 18, size: 2, delay: 0,   dur: 7  },
+  { x: 88, y: 22, size: 1.5, delay: 1, dur: 9  },
+  { x: 25, y: 72, size: 2.5, delay: 2, dur: 6  },
+  { x: 75, y: 65, size: 1.5, delay: 0.5, dur: 8 },
+  { x: 50, y: 15, size: 2,   delay: 3, dur: 10 },
+  { x: 5,  y: 50, size: 1,   delay: 1.5, dur: 7 },
+  { x: 95, y: 45, size: 2,   delay: 2.5, dur: 9 },
+  { x: 38, y: 85, size: 1.5, delay: 0.8, dur: 6},
+  { x: 62, y: 8,  size: 1,   delay: 3.5, dur: 8 },
+  { x: 18, y: 35, size: 2,   delay: 4,   dur: 7 },
+  { x: 82, y: 78, size: 1.5, delay: 1.2, dur: 9 },
+  { x: 45, y: 55, size: 1,   delay: 2.8, dur: 6 },
+];
+
+// Hex grid — decorative nodes
+const HEX_NODES = [
+  { cx: "8%",  cy: "20%", r: 40 },
+  { cx: "92%", cy: "25%", r: 50 },
+  { cx: "6%",  cy: "70%", r: 35 },
+  { cx: "94%", cy: "68%", r: 45 },
 ];
 
 export default function HeroSection() {
@@ -58,16 +77,6 @@ export default function HeroSection() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       aria-label="Hero section"
     >
-      {/* ── Neural Network Background ── */}
-      {!prefersReduced && (
-        <Suspense fallback={null}>
-          <NeuralNetworkBackground
-            intensity="normal"
-            showFPS={process.env.NODE_ENV === "development"}
-          />
-        </Suspense>
-      )}
-
       {/* ── Layered backgrounds ── */}
       <div className="absolute inset-0 grid-overlay opacity-40" aria-hidden="true" />
 
@@ -81,7 +90,24 @@ export default function HeroSection() {
         }}
       />
 
-
+      {/* Corner hexagonal decorations (SVG, no JS cost) */}
+      {HEX_NODES.map((n, i) => (
+        <div
+          key={i}
+          aria-hidden="true"
+          className="absolute pointer-events-none"
+          style={{ left: n.cx, top: n.cy, transform: "translate(-50%, -50%)" }}
+        >
+          <svg width={n.r * 2} height={n.r * 2} viewBox={`0 0 ${n.r * 2} ${n.r * 2}`} fill="none">
+            <polygon
+              points={`${n.r},2 ${n.r * 2 - 2},${n.r * 0.5} ${n.r * 2 - 2},${n.r * 1.5} ${n.r},${n.r * 2 - 2} 2,${n.r * 1.5} 2,${n.r * 0.5}`}
+              stroke="rgba(0,245,255,0.08)"
+              strokeWidth="1"
+              fill="rgba(0,245,255,0.015)"
+            />
+          </svg>
+        </div>
+      ))}
 
       {/* Ambient glow orbs */}
       <div
@@ -117,8 +143,55 @@ export default function HeroSection() {
         }}
       />
 
+      {/* Scan line — subtle sweep */}
+      {mounted && !prefersReduced && (
+        <div
+          aria-hidden="true"
+          className="absolute left-0 right-0 pointer-events-none"
+          style={{
+            height: 1,
+            background: "linear-gradient(90deg, transparent, rgba(0,245,255,0.25), transparent)",
+            animation: "heroScan 8s linear infinite",
+          }}
+        />
+      )}
 
+      {/* Floating particles */}
+      {mounted && !prefersReduced && (
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
+          {PARTICLES.map((p, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                left:   `${p.x}%`,
+                top:    `${p.y}%`,
+                width:  p.size,
+                height: p.size,
+                background: i % 3 === 0 ? "#00f5ff" : i % 3 === 1 ? "#0066ff" : "#7b2fff",
+                opacity: 0.5,
+                animation: `heroFloat ${p.dur}s ease-in-out infinite`,
+                animationDelay: `${p.delay}s`,
+                boxShadow: `0 0 ${p.size * 3}px currentColor`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
+      {/* Inject hero-specific keyframes once */}
+      <style>{`
+        @keyframes heroScan {
+          0%   { top: -2px; opacity: 0; }
+          5%   { opacity: 1; }
+          95%  { opacity: 0.6; }
+          100% { top: 100vh; opacity: 0; }
+        }
+        @keyframes heroFloat {
+          0%, 100% { transform: translateY(0px) scale(1); opacity: 0.4; }
+          50%       { transform: translateY(-22px) scale(1.2); opacity: 0.7; }
+        }
+      `}</style>
 
       {/* ── Main content ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-16">

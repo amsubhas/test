@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, type Variants } from 'framer-motion';
+import { Suspense, lazy } from "react";
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import SectionLabel from "@/components/ui/SectionLabel";
 import GlowCard from "@/components/ui/GlowCard";
 import { Brain, Atom, Cpu, Globe, Wifi, Eye } from "lucide-react";
 
+const NeuralNetwork = lazy(() => import("@/components/3d/NeuralNetwork"));
 
 const technologies = [
   {
@@ -116,7 +117,7 @@ export default function FutureTechnologies() {
                     </div>
                   }
                 >
-                  
+                  <NeuralNetwork />
                 </Suspense>
               ) : (
                 <div className="w-full h-full flex items-center justify-center terminal-text text-purple-400/20">

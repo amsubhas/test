@@ -1,71 +1,87 @@
-import { Suspense, lazy } from "react";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import HeroSection from "@/components/sections/HeroSection";
-import WingsStrip from "@/components/sections/WingsStrip";
-import IndustrySolutions from "@/components/sections/IndustrySolutions";
-import ContactSection from "@/components/sections/ContactSection";
-import type { Metadata } from "next";
+// Client wrapper handles ssr:false for Three.js — cannot use ssr:false in a Server Component
+import DigitalTwinCityClient from "@/components/DigitalTwinCityClient";
 
-// Code-split the heavy interactive sections
-const DigitalTwinCityClient = lazy(
-  () => import("@/components/DigitalTwinCityClient")
-);
-const IdeaToRealitySection = lazy(
-  () => import("@/components/idea-to-reality/IdeaToRealitySection")
-);
+// ── All below-fold sections: next/dynamic for proper App Router lazy loading
+const TransformationJourney  = dynamic(() => import("@/components/sections/TransformationJourney"));
+const DigitalTwinEcosystem   = dynamic(() => import("@/components/sections/DigitalTwinEcosystem"));
+const IdeaToRealitySection   = dynamic(() => import("@/components/idea-to-reality/IdeaToRealitySection"));
+const ServicesSection        = dynamic(() => import("@/components/sections/ServicesSection"));
+const IndustrySolutions      = dynamic(() => import("@/components/sections/IndustrySolutions"));
+const BuildmateShowcase      = dynamic(() => import("@/components/sections/BuildmateShowcase"));
+const FutureTechnologies     = dynamic(() => import("@/components/sections/FutureTechnologies"));
+const ImpactMetrics          = dynamic(() => import("@/components/sections/ImpactMetrics"));
+const SuccessStories         = dynamic(() => import("@/components/sections/SuccessStories"));
+const TimelineSection        = dynamic(() => import("@/components/sections/TimelineSection"));
+const ContactSection         = dynamic(() => import("@/components/sections/ContactSection"));
 
-export const metadata: Metadata = {
-  title: "NexGiga | Transforming Digital Intelligence Into Physical Reality",
-  description:
-    "NexGiga bridges the digital and physical worlds — BIM, AI, robotics, simulation and smart infrastructure. Four wings: NexForce, NexTech, NexDesign, NexBuild.",
-  alternates: { canonical: "https://nexgiga.sharvasit.in" },
-};
-
-// ─── Loading skeletons ────────────────────────────────────────────────────────
-function TwinSkeleton() {
+// Minimal placeholder shown while a section's JS loads
+function SectionSkeleton() {
   return (
     <div
-      className="w-full"
-      style={{ height: "80vh", background: "rgba(1,5,8,0.8)" }}
+      style={{ minHeight: "40px", background: "transparent" }}
       aria-hidden="true"
     />
   );
 }
 
-function SimulatorSkeleton() {
-  return (
-    <div
-      className="w-full"
-      style={{ height: 500, background: "transparent" }}
-      aria-hidden="true"
-    />
-  );
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function HomePage() {
+export default function Home() {
   return (
     <>
-      {/* 1. Hero — neural network background, tagline, CTA */}
+      {/* Hero renders immediately — no Suspense wrapper */}
       <HeroSection />
 
-      {/* 2. Four wings — compact conversion-driving overview */}
-      <WingsStrip />
-
-      {/* 3. Digital Twin City — the flagship visual centerpiece */}
-      <Suspense fallback={<TwinSkeleton />}>
+      {/* Digital Twin City — client-only (Three.js/R3F, no SSR) */}
+      <Suspense fallback={<SectionSkeleton />}>
         <DigitalTwinCityClient />
       </Suspense>
 
-      {/* 4. Idea-to-Reality Simulator — interactive AI demo */}
-      <Suspense fallback={<SimulatorSkeleton />}>
+      <Suspense fallback={<SectionSkeleton />}>
+        <TransformationJourney />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <DigitalTwinEcosystem />
+      </Suspense>
+
+      {/* ── Idea-to-Reality Simulator — placed immediately below Digital Twin ── */}
+      <Suspense fallback={<SectionSkeleton />}>
         <IdeaToRealitySection />
       </Suspense>
 
-      {/* 5. Industry Solutions — 6 verticals, conversion intent */}
-      <IndustrySolutions />
+      <Suspense fallback={<SectionSkeleton />}>
+        <ServicesSection />
+      </Suspense>
 
-      {/* 6. Contact CTA — final conversion action */}
-      <ContactSection />
+      <Suspense fallback={<SectionSkeleton />}>
+        <IndustrySolutions />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <BuildmateShowcase />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <FutureTechnologies />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <ImpactMetrics />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <SuccessStories />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <TimelineSection />
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton />}>
+        <ContactSection />
+      </Suspense>
     </>
   );
 }
